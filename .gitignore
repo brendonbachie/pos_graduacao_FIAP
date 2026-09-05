@@ -1,0 +1,23 @@
+# Ambiente virtual
+.venv/
+
+# Dados (não versionar - privacidade e tamanho)
+data/
+
+# Modelos treinados (artefatos gerados)
+models/*.pkl
+models/*.joblib
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# MLflow (experimentos locais)
+mlruns/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Configurações de IDE
+.vscode/
+.idea/

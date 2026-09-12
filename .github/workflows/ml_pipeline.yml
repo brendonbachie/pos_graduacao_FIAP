@@ -1,0 +1,26 @@
+name: ML Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality_assurance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o Código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+        
+      - name: Instalar Dependências
+        run: pip install -r requirements.txt
+      
+      - name: Rodar Testes
+        run: python3 -m pytest tests -v

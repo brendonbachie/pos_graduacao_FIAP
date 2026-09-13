@@ -50,7 +50,7 @@ jobs:
           name: modelo
           path: models/best_model.joblib
 
-  registration:
+  evaluation:
     needs: training
     runs-on: ubuntu-latest
 

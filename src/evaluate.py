@@ -38,8 +38,16 @@ def verificar_disparidade(disparidade, limiar=0.10):
     """Verifica se a disparidade está dentro do limite aceitável."""
     return disparidade <= limiar
 
+def verificar_acuracia(pipeline, X_test, y_test, limiar=0.95):
+    """Verifica se a acurácia do modelo no conjunto de teste atende ao limiar definido."""
+    y_pred = pipeline.predict(X_test)
+    acc = (y_pred == y_test).mean()
+    print(f"Acurácia do modelo no conjunto de teste: {acc:.4f}")
+    return acc >= limiar
+
 def evaluate_model(pipeline, X_test, y_test):
     LIMIAR_DISPARIDADE = 0.10
+    LIMIAR_ACURACIA = 0.80
     MIN_CASOS_CONFIAVEL = 10
 
     sensitive_sex = X_test["sex"]
@@ -59,6 +67,11 @@ def evaluate_model(pipeline, X_test, y_test):
         print("\n✅ APROVADO: disparidade dentro do limite aceitável.")
     else:
         print("\n❌ REPROVADO: disparidade acima do limite aceitável.")
+        sys.exit(1)
+    if verificar_acuracia(pipeline, X_test, y_test, LIMIAR_ACURACIA):
+        print("✅ APROVADO: acurácia dentro do limite aceitável.")
+    else:
+        print("❌ REPROVADO: acurácia abaixo do limite aceitável.")
         sys.exit(1)
 
 if __name__ == "__main__":

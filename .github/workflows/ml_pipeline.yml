@@ -24,3 +24,54 @@ jobs:
       
       - name: Rodar Testes
         run: python3 -m pytest tests -v
+
+  training:
+    needs: quality_assurance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o Código
+        uses: actions/checkout@v4
+    
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Instalar Dependências
+        run: pip install -r requirements.txt
+
+      - name: Treinar Modelo
+        run: python3 -m src.train
+
+      - name: Upload do Modelo
+        uses: actions/upload-artifact@v4
+        with:
+          name: modelo
+          path: models/best_model.joblib
+
+  registration:
+    needs: training
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Baixar o Código
+        uses: actions/checkout@v4
+
+      - name: Download do Modelo
+        uses: actions/download-artifact@v4
+        with:
+          name: modelo
+          path: models/
+    
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Instalar Dependências
+        run: pip install -r requirements.txt
+
+      - name: Testar o Modelo
+        run: python3 -m src.evaluate

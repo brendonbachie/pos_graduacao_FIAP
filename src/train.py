@@ -6,7 +6,10 @@ from sklearn.metrics import accuracy_score
 import mlflow
 import mlflow.sklearn
 from sklearn.model_selection import cross_val_score
+from pathlib import Path
 
+RAIZ = Path(__file__).resolve().parent.parent
+DB_PATH = RAIZ / "mlflow.db"
 
 def train(X_train, y_train):
     "Treina o pipeline completo e retorna o modelo ajustado"
@@ -25,7 +28,7 @@ def accuracy(pipeline, X_test, y_test):
 
 
 if __name__ == "__main__":
-    mlflow.set_tracking_uri("sqlite:////home/casnav/tech-challenge/mlflow.db")
+    mlflow.set_tracking_uri(f"sqlite:///{DB_PATH}")
     mlflow.set_experiment("heart-disease")
     X, y = load_dataset()
     X_train, X_test, y_train, y_test = dividir_treino_teste(X, y, test_size=0.2, random_state=42, stratify=y)

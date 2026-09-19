@@ -3,6 +3,10 @@ import joblib
 from pathlib import Path
 from pydantic import BaseModel
 import pandas as pd
+from datetime import datetime
+import json
+
+MODEL_VERSION = "1.0.0"
 
 """Seta a pasta raiz do projeto para que o FastAPI consiga localizar o modelo treinado e os módulos auxiliares."""
 RAIZ = Path(__file__).resolve().parent.parent
@@ -38,6 +42,13 @@ def predict(paciente: Paciente):
     dados = pd.DataFrame([paciente.model_dump()])
     predicao = modelo.predict(dados)[0]
     probabilidade = modelo.predict_proba(dados)[0][1]
+    log = {
+        "timestamp": datetime.now().isoformat(),
+        "input_features": paciente.model_dump(),
+        "prediction": int(predicao),
+        "model_version": MODEL_VERSION,
+    }
+    print(json.dumps(log))
     return {
         "predicao": int(predicao),
         "probabilidade_doenca": float(probabilidade)

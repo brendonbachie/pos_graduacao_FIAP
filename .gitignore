@@ -22,3 +22,4 @@ mlflow.db
 # Configurações de IDE
 .vscode/
 .idea/
+logs.jsonl

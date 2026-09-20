@@ -11,6 +11,9 @@ MODEL_VERSION = "1.0.0"
 """Seta a pasta raiz do projeto para que o FastAPI consiga localizar o modelo treinado e os módulos auxiliares."""
 RAIZ = Path(__file__).resolve().parent.parent
 
+"""Define o caminho do arquivo de log para registrar as predições feitas pela API."""
+LOG_PATH = RAIZ / "logs.jsonl"
+
 """Inicia a API """
 app = FastAPI(title="API para identificar a saúde do programa")
 
@@ -48,7 +51,8 @@ def predict(paciente: Paciente):
         "prediction": int(predicao),
         "model_version": MODEL_VERSION,
     }
-    print(json.dumps(log))
+    with open(LOG_PATH, "a") as f:
+        print(json.dumps(log), file=f)
     return {
         "predicao": int(predicao),
         "probabilidade_doenca": float(probabilidade)
